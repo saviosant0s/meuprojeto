@@ -1,0 +1,82 @@
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+        <title>Página com tailwind</title>
+        <link rel="stylesheet" href="./css/style.css">
+    </head>
+    <body class="">
+        <header class="">
+            <button onclick="buscarUsuarios()">Buscar usuarios</button>
+            <div id="resultado"></div>
+        </header>
+        <nav></nav>
+        <main class="">
+            <form  onsubmit="enviar(event)" class="w-11/12 md:w-1/2 text-white flex flex-col mx-auto my-10 p-5 gap-3 rounded-xl bg-slate-800 "  method="post">
+                <label class="text-blue-600" for="nome" >Nome:</label>
+                <input class="bg-blue-600 rounded-xs px-2 py-1" type="text" name="nome" id="nome" required>
+
+                <label class="text-blue-600" for="email">Email</label>
+                <input class="bg-blue-600 rounded-xs px-2 py-1" type="email" name="email" id="email" required>
+
+                <label class="text-blue-600" for="senha">senha</label>
+                <input class="bg-blue-600 rounded-xs px-2 py-1" type="password" name="senha" id="senha" required>
+
+                <label class="text-blue-600" for="idade">idade</label>
+                <input class="bg-blue-600 rounded-xs px-2 py-1" type="number" name="idade" id="idade" min="18" max="120">
+                
+                <label class="text-blue-600" for="data">Data de Nascimento:</label>
+                <input class="bg-blue-600 rounded-xs px-2 py-1" type="date" id="data" name="data_nascimento">
+
+                <select class="bg-blue-600 rounded-xs px-2 py-1" name="estado">
+                    <option value="">Selecione</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                </select>
+
+                <textarea class="bg-blue-600 rounded-xs px-2 py-1" name="mensagem" rows="4"></textarea>
+                <button class="bg-blue-600 rounded-xs px-2 py-1" type="submit" id="btnenviar" >Enviar</button>
+            </form>
+            <div id="resposta"></div>
+        </main>
+        <footer class="bg-blue-600">rodapé</footer>
+    
+        <script>
+            async function buscarUsuarios(){
+                const res = await fetch("/principal/api.php");
+                const dados = await res.json();
+                let html = "";
+                dados.forEach(usuario => {
+                        html += "Nome: " + usuario.nome + "<br>";
+                        html += "Email: " + usuario.email + "<br><br>"
+                    });
+                    document.getElementById("resultado").innerHTML = html;
+                };
+            function enviar(event){
+                event.preventDefault();
+                let nome = document.getElementById('nome').value;
+                let email = document.getElementById('email').value;
+                let senha = document.getElementById('senha').value;
+                fetch('/principal/api.php',{
+                    method: 'post',
+                    headers:  {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        nome: nome,
+                        email: email,
+                        senha: senha
+                    })  
+                })
+                .then(res=>res.json())
+                .then(dados=>{
+                    document.getElementById('resposta').innerHTML = dados.status;
+                });
+            }
+            
+        </script>
+    
+    
+    </body>
+    
+</html>

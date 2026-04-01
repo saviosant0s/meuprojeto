@@ -3,10 +3,13 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" >
         <title>Página com tailwind</title>
-        <link rel="stylesheet" href="./css/style.css">
+        <link rel="stylesheet" href="../principal/css/style.css">
     </head>
     <body class="">
-        <header class="bg-blue-600">header</header>
+        <header class="">
+            <button onclick="buscarUsuarios()">Buscar usuarios</button>
+            <div id="resultado"></div>
+        </header>
         <nav></nav>
         <main class="">
             <form class="w-11/12 md:w-1/2 text-white flex flex-col mx-auto my-10 p-5 gap-3 rounded-xl bg-slate-800 " action="processar.php" method="post">
@@ -38,4 +41,17 @@
         </main>
         <footer class="bg-blue-600">rodapé</footer>
     </body>
+    <script>
+        async function buscarUsuarios(){
+            console.log("clicou");
+            const res = await fetch("api.php");
+            const dados = await res.json();
+            let html = "";
+            dados.forEach(usuario => {
+                    html += "Nome: " + usuario.nome + "<br>";
+                    html += "Email: " + usuario.email + "<br><br>"
+                });
+                document.getElementById("resultado").innerHTML = html;
+            };
+    </script>
 </html>
